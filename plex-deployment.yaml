@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+        - name: plex
+          image: plexinc/pms-docker
+          env:
+            - name: "TZ"
+              value: "Asia/Jakarta"
+            - name: "ADVERTISE_IP"
+              value: "http://10.0.0.100:32400"
+            - name: "PLEX_UID"
+              value: "1001"
+            - name: "PLEX_GID"
+              value: "1001"
+            - name: "ALLOWED_NETWORKS"
+              value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+          ports:
+            - containerPort: 32400
+          volumeMounts:
+            - name: plex-data
+              mountPath: /data
+      volumes:
+        - name: plex-data
+          persistentVolumeClaim:
+           claimName: plex-pvc

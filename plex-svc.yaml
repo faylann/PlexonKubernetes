@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: plex-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 32400
+      nodePort: 32400
+  selector:
+    app: plex
